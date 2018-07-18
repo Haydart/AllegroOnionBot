@@ -1,3 +1,4 @@
+import re
 from time import sleep
 
 import requests
@@ -15,12 +16,37 @@ def launch_bot():
     print(allegro.get_user_public_data(user_id=huawei_id))
 
     while True:
-        items = fetch_huawei_items()
-        all_items = [(item['id'], item['sellingMode']['price']['amount'], item['name'])
-                     for item in items['items']['promoted'] + items['items']['regular']]
-        for item in all_items:
+        try:
+            items = fetch_huawei_items()
+            all_items = extract_all_products(items)
+            print_all_items(all_items)
+            desired_item_id, price = find_desired_item(all_items)
+            if desired_item_id:
+                print("BUYING DESIRED ITEM!!")
+                for i in range(0, 50):
+                    user.buy_or_bid(offer_id=desired_item_id, price=price, amount=1, buy_now=True)
+                    sleep(0.01)
+        except Exception:
+            pass
+        sleep(.01)
+
+
+def extract_all_products(items):
+    return [
+        (item['id'], float(item['sellingMode']['price']['amount']), re.sub('[^A-Za-z0-9 ]+', '', item['name'].lower()))
+        for item in items['items']['promoted'] + items['items']['regular']]
+
+
+def print_all_items(all_items):
+    for item in all_items:
+        print(item)
+
+
+def find_desired_item(all_items):
+    for item in all_items:
+        if 'honor' in item[2] and '7c' in item[2] and item[1] <= 10.0:
             print(item)
-        sleep(.5)
+            return item[0], item[1]
 
 
 def login(allegro):
