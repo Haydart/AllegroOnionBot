@@ -9,9 +9,11 @@ def launch_bot():
 def login_to_api():
     allegro_api = AllegroWebApi(API_KEY, SANDBOX, COUNTRY)
     user = allegro_api.login(USERNAME, PASSWORD)
-    buy_request = user.buy_or_bid(offer_id=7445656286, price=5, amount=1, buy_now=True)
+    # buy_request = user.buy_or_bid(offer_id=7445656286, price=5, amount=1, buy_now=True)
+    print(allegro_api.get_user_id("SmA-Huawei1"))
+    print(allegro_api.get_user_id("SmA-Huawei1"))
+
     print(user)
-    print(buy_request)
 
 
 if __name__ == '__main__':
