@@ -2,7 +2,6 @@ from pallegro.pallegro import AllegroWebApi
 
 
 
-
 def launch_bot():
     login_to_api()
 
